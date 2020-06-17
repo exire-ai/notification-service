@@ -4,12 +4,15 @@ require("./worker");
 
 const RedisServer = require("redis-server");
 
-const server = new RedisServer(6370);
+const server = new RedisServer(6379);
+console.log("Hello world");
 
 server.open((err) => {
   if (err === null) {
     kue = require("./kue");
     main().catch(console.error);
+  } else {
+    console.log("Error: " + err);
   }
 });
 
