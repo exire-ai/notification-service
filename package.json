@@ -4,6 +4,7 @@
   "description": "Coordinates push notifications for Exire",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Frank Pinnola",
