@@ -1,0 +1,5 @@
+#Installed Modules
+node_modules
+
+#Redis Generated Files
+dump.rdb
