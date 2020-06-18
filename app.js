@@ -1,22 +1,23 @@
 const { MongoClient } = require("mongodb");
 const RedisServer = require("redis-server");
 
-var kue = require("./kue");
-require("./worker");
+// var kue = require("./kue");
+var kue = null;
+// require("./worker");
 console.log(process.env.REDIS_URL);
 const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
 
-// const server = new RedisServer(6379);
+const server = new RedisServer(6379);
 
-// server.open((err) => {
-//   if (err === null) {
-//     kue = require("./kue");
-//     require("./worker");
-//     main().catch(console.error);
-//   }
-// });
+server.open((err) => {
+  if (err === null) {
+    kue = require("./kue");
+    require("./worker");
+    main().catch(console.error);
+  }
+});
 
 app.set("port", port);
 
