@@ -8,7 +8,7 @@ const express = require("express");
 const app = express();
 const port = process.env.PORT || 3000;
 
-const server = new RedisServer(6379);
+const server = new RedisServer(6370);
 
 server.open((err) => {
   if (err === null) {
