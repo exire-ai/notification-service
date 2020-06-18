@@ -1,6 +1,9 @@
 var kue = require("kue");
 
-var Queue = kue.createQueue({ redis: process.env.REDIS_URL || 'redis://127.0.0.1:6379' });
+var Queue = kue.createQueue({ redis: {
+  port: process.env.REDIS_PORT,
+  host: process.env.REDIS_HOST
+}});
 
 let scheduleJob = (data) => {
   Queue.createJob(data.jobName, data.params)
