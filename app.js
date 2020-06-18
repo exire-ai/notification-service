@@ -19,6 +19,8 @@ const port = process.env.PORT || 3000;
 //   }
 // });
 
+main().catch(console.error);
+
 app.set("port", port);
 
 async function main() {
