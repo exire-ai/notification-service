@@ -1,9 +1,9 @@
 var kue = require("kue");
 
-console.log(process.env.REDIS_URL)
+console.log(process.env.REDIS_URL);
 
 var Queue = kue.createQueue({
-  redis: process.env.REDIS_URL
+  redis: process.env.REDIS_URL ? process.env.REDIS_URL : "127.0.0.1",
 });
 
 let scheduleJob = (data) => {

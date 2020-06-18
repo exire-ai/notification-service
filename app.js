@@ -1,15 +1,24 @@
 const { MongoClient } = require("mongodb");
-var kue = require("./kue");
-require("./worker");
-
-const express = require('express')
-const app = express()
-const port = (process.env.PORT || 3000)
-
-app.set('port', port)
-
 const RedisServer = require("redis-server");
-main().catch(console.error);
+
+var kue = {};
+// require("./worker");
+
+const express = require("express");
+const app = express();
+const port = process.env.PORT || 3000;
+
+const server = new RedisServer(6379);
+
+server.open((err) => {
+  if (err === null) {
+    kue = require("./kue");
+    require("./worker");
+    main().catch(console.error);
+  }
+});
+
+app.set("port", port);
 
 async function main() {
   const uri =
@@ -41,5 +50,7 @@ async function main() {
   }
 }
 
-app.get('/', (req, res) => res.send('Hello World!'))
-app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
+app.get("/", (req, res) => res.send("Hello World!"));
+app.listen(port, () =>
+  console.log(`Example app listening at http://localhost:${port}`)
+);
