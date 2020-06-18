@@ -1,39 +1,36 @@
-const express = require("express"),
-  app = express(),
-  bodyParser = require("body-parser");
-const kue = require("./kue");
+const { MongoClient } = require("mongodb");
+var kue = require("./kue");
 require("./worker");
 
-// support parsing of application/json type post data
-app.use(bodyParser.json());
+// const RedisServer = require("redis-server");
+main().catch(console.error);
 
-app.post("/book-ticket", async (req, res) => {
-  let args = {
-    jobName: "sendEmail",
-    time: 1000,
-    params: {
-      email: req.body.email,
-      subject: "Booking Confirmed",
-      body: "Your booking is confirmed!!",
-    },
-  };
-  kue.scheduleJob(args);
+async function main() {
+  const uri =
+    "mongodb+srv://fpinnola:F55server-e@cluster0-w3lve.mongodb.net/NotificationQueue?retryWrites=true&w=majority";
+  const client = new MongoClient(uri, { useUnifiedTopology: true });
+  try {
+    await client.connect();
 
-  // Schedule Job to send email 10 minutes before the movie
-  args = {
-    jobName: "sendEmail",
-    time: (req.body.start_time - 10 * 60) * 1000, // (Start time - 10 minutes) in millieconds
-    params: {
-      email: req.body.email,
-      subject: "Movie starts in 10 minutes",
-      body:
-        "Your movie will start in 10 minutes. Hurry up and grab your snacks.",
-    },
-  };
-  kue.scheduleJob(args);
-
-  // Return a response
-  return res.status(200).json({ response: "Booking Successful!" });
-});
-
-app.listen(8080, () => console.log(`Hey there! I'm listening.`));
+    const collection = client.db("NotificationQueue").collection("Data");
+    const changeStream = collection.watch(
+      [{ $match: { operationType: "insert" } }],
+      { fullDocument: "updateLookup" }
+    );
+    changeStream.on("change", (next) => {
+      //UPDATE switch token to array, for sending same notif to group of users
+      let args = {
+        jobName: "sendNotification",
+        time: next.fullDocument.time * 1000,
+        params: {
+          token: next.fullDocument.token,
+          title: next.fullDocument.title,
+          body: next.fullDocument.body,
+        },
+      };
+      kue.scheduleJob(args);
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}
