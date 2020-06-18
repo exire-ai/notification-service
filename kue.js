@@ -1,5 +1,10 @@
 var kue = require("kue");
-var Queue = kue.createQueue({ redis: process.env.REDIS_URL });
+
+if (process.env.REDISTOGO_URL) {
+  var Queue = kue.createQueue({ redis: process.env.REDISTOGO_URL });
+} else {
+  var Queue = kue.createQueue()
+}
 
 let scheduleJob = (data) => {
   Queue.createJob(data.jobName, data.params)
