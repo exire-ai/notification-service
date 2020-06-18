@@ -2,7 +2,7 @@ const { MongoClient } = require("mongodb");
 var kue = require("./kue");
 require("./worker");
 
-// const RedisServer = require("redis-server");
+const RedisServer = require("redis-server");
 main().catch(console.error);
 
 async function main() {
