@@ -4,7 +4,9 @@ require("./worker");
 
 const express = require('express')
 const app = express()
-const port = 3000
+const port = (process.env.PORT || 3000)
+
+app.set('port', port)
 
 const RedisServer = require("redis-server");
 main().catch(console.error);
