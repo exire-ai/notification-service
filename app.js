@@ -4,11 +4,11 @@ const RedisServer = require("redis-server");
 var kue = {};
 // require("./worker");
 
-const express = require("express");
-const app = express();
+// const express = require("express");
+// const app = express();
 const port = process.env.PORT || 3000;
 
-const server = new RedisServer(6370);
+const server = new RedisServer(port);
 
 server.open((err) => {
   if (err === null) {
@@ -18,7 +18,7 @@ server.open((err) => {
   }
 });
 
-app.set("port", port);
+// app.set("port", port);
 
 async function main() {
   const uri =
@@ -50,7 +50,7 @@ async function main() {
   }
 }
 
-app.get("/", (req, res) => res.send("Hello World!"));
-app.listen(port, () =>
-  console.log(`Example app listening at http://localhost:${port}`)
-);
+// app.get("/", (req, res) => res.send("Hello World!"));
+// app.listen(port, () =>
+//   console.log(`Example app listening at http://localhost:${port}`)
+// );
