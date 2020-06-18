@@ -2,6 +2,10 @@ const { MongoClient } = require("mongodb");
 var kue = require("./kue");
 require("./worker");
 
+const express = require('express')
+const app = express()
+const port = 3000
+
 const RedisServer = require("redis-server");
 main().catch(console.error);
 
@@ -34,3 +38,6 @@ async function main() {
     console.log(e);
   }
 }
+
+app.get('/', (req, res) => res.send('Hello World!'))
+app.listen(port, () => console.log(`Example app listening at http://localhost:${port}`))
