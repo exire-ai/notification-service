@@ -52,13 +52,13 @@ app.post("/add", (req, res) => {
   if (
     req.body.title != undefined &&
     req.body.time != undefined &&
-    req.body.token != undefined
+    req.body.tokens != undefined
   ) {
     let args = {
       jobName: "sendNotification",
       time: req.body.time * 1000,
       params: {
-        token: req.body.token,
+        tokens: req.body.tokens,
         title: req.body.title,
         body: req.body.body,
       },
