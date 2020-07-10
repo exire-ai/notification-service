@@ -22,42 +22,14 @@ app.use(function (req, res, next) {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-// main().catch(console.error);
-
 app.set("port", port);
-
-// async function main() {
-//   const uri =
-//     "mongodb+srv://fpinnola:F55server-e@cluster0-w3lve.mongodb.net/NotificationQueue?retryWrites=true&w=majority";
-//   const client = new MongoClient(uri, { useUnifiedTopology: true });
-//   try {
-//     await client.connect();
-
-//     const collection = client.db("NotificationQueue").collection("Data");
-//     const changeStream = collection.watch(
-//       [{ $match: { operationType: "insert" } }],
-//       { fullDocument: "updateLookup" }
-//     );
-//     changeStream.on("change", (next) => {
-//       //UPDATE switch token to array, for sending same notif to group of users
-//       let args = {
-//         jobName: "sendNotification",
-//         time: next.fullDocument.time * 1000,
-//         params: {
-//           token: next.fullDocument.token,
-//           title: next.fullDocument.title,
-//           body: next.fullDocument.body,
-//         },
-//       };
-//       kue.scheduleJob(args);
-//     });
-//   } catch (e) {
-//     console.log(e);
-//   }
-// }
 
 app.get("/", (req, res) => res.send("Hello World!"));
 app.post("/add", (req, res) => {
+  var data = {};
+  if (req.body.data != undefined) {
+    data = req.body.data;
+  }
   if (
     req.body.title != undefined &&
     req.body.time != undefined &&
@@ -70,6 +42,7 @@ app.post("/add", (req, res) => {
         tokens: req.body.tokens,
         title: req.body.title,
         body: req.body.body,
+        data: data,
       },
     };
     kue.scheduleJob(args);

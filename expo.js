@@ -22,7 +22,7 @@ let pushNotifs = (data) => {
       title: data.title,
       sound: "default",
       body: data.body,
-      data: { withSome: "data" },
+      data: data.data,
     });
   }
   // The Expo push notification service accepts batches of notifications so
